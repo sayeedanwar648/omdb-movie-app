@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form id="mainform">
+        <input type="text" id="movie_name" placeholder="Enter Movie Name">
+        <input type="submit">
+    </form>
+    <div id="container">
+
+    </div>
+    <div id="err"></div>
+    
+</body>
+</html>
+<script>
+    // let url=`https://omdbapi.com/?t=${thor}&apikey=a0885521`
+    let form=document.getElementById("mainform")
+    form.addEventListener("submit",searchmovie);
+    function searchmovie(){
+        event.preventDefault();
+        let name=document.getElementById("movie_name").value;
+        // console.log(name)
+        let url=`https://omdbapi.com/?t=${name}&apikey=a0885521`
+        let container=document.getElementById("container");
+        fetch(url).then(function(res){
+            return res.json();
+        })
+        .then(function(res){
+            if(res.Response=="True"){
+                appenddata(res)
+                console.log(res)
+            }
+            else{
+                console.log("Movie is not Present");
+              let d=document.getElementById("err");
+              let img=document.createElement("img");
+              img.src="https://c.tenor.com/NpZyGNG3SLEAAAAM/this-content-is-not-available.gif";
+              d.append(img);
+            }
+            
+        })
+        .catch(function(err){
+            console.log(err)
+        })
+        function appenddata(data){
+            
+            let div=document.createElement("div");
+          let tittle = document.createElement("h1");
+          tittle.innerText = `Title: ${data.Title}`;
+          let actor = document.createElement("p");
+          actor.innerText = `Actor: ${data.Actors}`;
+          let image = document.createElement("img");
+          image.src = data.Poster;
+          let release=document.createElement("p");
+          release.innerText= `Released Date:${data.Released}`;
+          let imdbRating=document.createElement("p")
+          imdbRating.innerText=data.imdbRating;
+          if(imdbRating>8){
+              imdbRating.innerText="recommended"
+              imdbRating.style.color="green"
+          }
+                div.append(image,tittle,actor,release,imdbRating);
+                container.append(div)
+        
+        }
+
+
+    }
+
+</script>
